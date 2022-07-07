@@ -18,19 +18,6 @@ app.get('/', (req, res) => {
   res.send('hello world');
 });
 
-app.post('/auth/login', (req, res) => {
-  const token = jwt.sign(
-    {
-      email: req.body.email,
-    },
-    'shhhhh'
-  );
-
-  res.json({
-    success: true,
-    token,
-  });
-});
 
 app.listen(PORT, () => {
   console.log(`Your server is single and ready to mingle at port ${PORT}`);
