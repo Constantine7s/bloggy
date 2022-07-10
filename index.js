@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import signUpValidation from './validation/auth.js';
 import { validationResult } from 'express-validator';
 import UserModel from './models/users.js';
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcrypt';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -21,10 +21,11 @@ app.get('/', (req, res) => {
   res.send('hello world');
 });
 
-app.post('/auth/signup', signUpValidation, async (req,res) => {
+app.post('/auth/signup', signUpValidation, async (req, res) => {
+  try {
     const errors = validationResult(req);
-    if (!errors.isEmpty()){
-        return res.status(400).json(errors.array())
+    if (!errors.isEmpty()) {
+      return res.status(400).json(errors.array());
     }
 
     const password = req.body.password;
@@ -35,14 +36,16 @@ app.post('/auth/signup', signUpValidation, async (req,res) => {
       name: req.body.name,
       email: req.body.email,
       userPic: req.body.userPic,
-      passwordHash
-    })
+      passwordHash,
+    });
 
     const user = await doc.save();
 
-    res.json(user)
-})
-
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: "Couldn't save user", err: err });
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Your server is single and ready to mingle at port ${PORT}`);
