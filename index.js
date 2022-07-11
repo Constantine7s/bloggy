@@ -1,10 +1,11 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
-import signUpValidation from './validation/auth.js';
+import signUpValidation from './middleware/auth.js';
 import { validationResult } from 'express-validator';
 import UserModel from './models/users.js';
 import bcrypt from 'bcrypt';
+import checkAuth from './middleware/checkAuth.js';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -53,7 +54,7 @@ app.post('/auth/signup', signUpValidation, async (req, res) => {
 
     return res.json({ ...userData, token });
   } catch (err) {
-    res.status(500).json({ message: "Couldn't save user"});
+    res.status(500).json({ message: "Couldn't save user" });
   }
 });
 
@@ -61,7 +62,7 @@ app.post('/auth/login', async (req, res) => {
   try {
     const user = await UserModel.findOne({ email: req.body.email });
     if (!user) {
-     return res.status(400).json({ message: "Couldn't find user" });
+      return res.status(400).json({ message: "Couldn't find user" });
     }
     const isValidPass = await bcrypt.compare(
       req.body.password,
@@ -84,6 +85,24 @@ app.post('/auth/login', async (req, res) => {
     return res.json({ ...userData, token });
   } catch (error) {
     res.status(500).json({ message: "Couldn't log in" });
+  }
+});
+
+app.get('/auth/me', async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.userId);
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+    }
+
+    const { passwordHash, ...userData } = user._doc;
+    res.json(userData);
+    
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: 'Access denied',
+    });
   }
 });
 
