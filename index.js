@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import {signUpValidation, loginValidation} from './middleware/auth.js';
 import { login, register, getSelf } from './controllers/UserController'
+import { createPost } from './controllers/PostController'
 import checkAuth from '../middleware/checkAuth.js';
 -
 app.use(express.json());
@@ -16,6 +17,8 @@ mongoose
 app.post('/auth/signup', signUpValidation,register);
 app.post('/auth/login',loginValidation,login);
 app.get('/auth/me', checkAuth, getSelf);
+
+app.post('/post', createPost);
 
 app.listen(PORT, () => {
   console.log(`Your server is single and ready to mingle at port ${PORT}`);
