@@ -1,6 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import signUpValidation from './middleware/auth.js';
+import {signUpValidation, loginValidation} from './middleware/auth.js';
 import { login, register, getSelf } from './controllers/UserController'
 import checkAuth from '../middleware/checkAuth.js';
 -
@@ -14,7 +14,7 @@ mongoose
   .catch((err) => console.error('DB Error', err));
 
 app.post('/auth/signup', signUpValidation,register);
-app.post('/auth/login',login);
+app.post('/auth/login',loginValidation,login);
 app.get('/auth/me', checkAuth, getSelf);
 
 app.listen(PORT, () => {

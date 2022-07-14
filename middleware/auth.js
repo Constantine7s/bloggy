@@ -7,4 +7,11 @@ const signUpValidation = [
   body('userPic').optional().isURL(),
 ];
 
+const loginValidation = [
+  body('email').isEmail(),
+  body('password').isLength({ min: 8 }),
+
+];
+
+
 export default signUpValidation
