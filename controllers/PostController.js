@@ -35,12 +35,25 @@ export const getPostById = async (req, res) => {
     (err, doc) => {
       if (err) {
         console.log(err);
-        return res.status(500).json({ error: "Couldn't find post" });
+        return res.status(500).json({ error: "Couldn't get post" });
       }
-      if (!doc){
+      if (!doc) {
         return res.status(404).json({ error: "Couldn't find post" });
       }
       res.json(doc);
     }
   );
+};
+
+export const deletePost = async (req, res) => {
+  PostModel.findOneAndDelete({ _id: req.params.id }, (err, doc) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({ error: "Couldn't delete post" });
+    }
+    if (!doc) {
+      return res.status(404).json({ error: "Couldn't find post" });
+    }
+    res.json({ success: true });
+  });
 };
