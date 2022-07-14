@@ -19,10 +19,28 @@ export const createPost = async (req, res) => {
 
 export const getAllPosts = async (req, res) => {
   try {
-    const posts = await PostModel.find();
+    const posts = await PostModel.find().populate('author').exec();
     res.json(posts);
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "Couldn't find posts" });
   }
+};
+
+export const getPostById = async (req, res) => {
+  PostModel.findOneAndUpdate(
+    { _id: req.params.id },
+    { $inc: { views: 1 } },
+    { returnDocument: 'after' },
+    (err, doc) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({ error: "Couldn't find post" });
+      }
+      if (!doc){
+        return res.status(404).json({ error: "Couldn't find post" });
+      }
+      res.json(doc);
+    }
+  );
 };
