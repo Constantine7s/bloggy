@@ -1,10 +1,17 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import { signUpValidation, loginValidation } from './middleware/auth.js';
-import * as UserController from './controllers/UserController';
-import * as PostController from './controllers/PostController';
-import checkAuth from '../middleware/checkAuth.js';
--app.use(express.json());
+import {
+  signUpValidation,
+  loginValidation,
+  createPostValidation,
+} from './middleware/validation.js';
+import * as UserController from './controllers/UserController.js';
+import * as PostController from './controllers/PostController.js';
+import checkAuth from './middleware/checkAuth.js';
+
+const app = express();
+const PORT = process.env.PORT || 8080;
+app.use(express.json());
 
 mongoose
   .connect(
@@ -17,7 +24,11 @@ app.post('/auth/signup', signUpValidation, UserController.register);
 app.post('/auth/login', loginValidation, UserController.login);
 app.get('/auth/me', checkAuth, UserController.getSelf);
 
-app.post('/post', PostController.createPost);
+// app.get('/posts', PostController.getAllPosts);
+// app.get('/posts/:id', PostController.getPostById);
+app.post('/posts', checkAuth, createPostValidation, PostController.createPost);
+// app.post('/posts', PostController.deletePost);
+// app.patch('/posts', PostController.updatePost);
 
 app.listen(PORT, () => {
   console.log(`Your server is single and ready to mingle at port ${PORT}`);
