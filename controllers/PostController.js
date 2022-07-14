@@ -1,4 +1,5 @@
 import PostModel from '../models/posts.js';
+import { register } from './UserController.js';
 
 export const createPost = async (req, res) => {
   try {
@@ -28,7 +29,7 @@ export const getAllPosts = async (req, res) => {
 };
 
 export const getPostById = async (req, res) => {
-  PostModel.findOneAndUpdate(
+   PostModel.findOneAndUpdate(
     { _id: req.params.id },
     { $inc: { views: 1 } },
     { returnDocument: 'after' },
@@ -45,7 +46,7 @@ export const getPostById = async (req, res) => {
   );
 };
 
-export const deletePost = async (req, res) => {
+export const deletePost =  (req, res) => {
   PostModel.findOneAndDelete({ _id: req.params.id }, (err, doc) => {
     if (err) {
       console.log(err);
@@ -57,3 +58,14 @@ export const deletePost = async (req, res) => {
     res.json({ success: true });
   });
 };
+
+export const updatePost = async (req, res) => {
+    await PostModel.updateOne({ _id: req.params.id },{
+        title: req.body.title,
+        text: req.body.text,
+        imageUrl: req.body.imageUrl,
+        tags: req.body.tags,
+        author: req.userId,
+      })
+    res.json({ success: true });
+    }

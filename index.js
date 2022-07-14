@@ -28,7 +28,7 @@ app.get('/posts', PostController.getAllPosts);
 app.get('/posts/:id', PostController.getPostById);
 app.post('/posts', checkAuth, createPostValidation, PostController.createPost);
 app.delete('/posts/:id',checkAuth, PostController.deletePost);
-// app.patch('/posts', PostController.updatePost);
+app.patch('/posts/:id', checkAuth, PostController.updatePost);
 
 app.listen(PORT, () => {
   console.log(`Your server is single and ready to mingle at port ${PORT}`);
