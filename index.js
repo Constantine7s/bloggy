@@ -10,12 +10,13 @@ import {
 import * as UserController from './controllers/UserController.js';
 import * as PostController from './controllers/PostController.js';
 import checkAuth from './middleware/checkAuth.js';
+import cors from 'cors';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
 const DB = process.env.DB_URL;
 app.use(express.json());
-
+app.use(cors());
 app.use('/uploads', express.static('uploads'));
 
 mongoose
