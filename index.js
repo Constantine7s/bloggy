@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 8080;
 const DB = process.env.DB_URL;
 app.use(express.json());
 
-
+app.use('/uploads', express.static('uploads'));
 
 mongoose
   .connect(DB)
@@ -35,7 +35,7 @@ app.patch('/posts/:id', checkAuth, PostController.updatePost);
 
 app.post('/upload',checkAuth, upload.single('image'), (req, res) => {
   res.json({url: `./uploads/${req.file.originalname}`})
-})
+});
 
 app.listen(PORT, () => {
   console.log(`Your server is single and ready to mingle at port ${PORT}`);
