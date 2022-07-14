@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import 'dotenv/config'
+import 'dotenv/config';
+import upload from './middleware/storage.js'
 import {
   signUpValidation,
   loginValidation,
@@ -12,8 +13,10 @@ import checkAuth from './middleware/checkAuth.js';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
-const DB = process.env.DB_URL
+const DB = process.env.DB_URL;
 app.use(express.json());
+
+
 
 mongoose
   .connect(DB)
@@ -27,8 +30,12 @@ app.get('/auth/me', checkAuth, UserController.getSelf);
 app.get('/posts', PostController.getAllPosts);
 app.get('/posts/:id', PostController.getPostById);
 app.post('/posts', checkAuth, createPostValidation, PostController.createPost);
-app.delete('/posts/:id',checkAuth, PostController.deletePost);
+app.delete('/posts/:id', checkAuth, PostController.deletePost);
 app.patch('/posts/:id', checkAuth, PostController.updatePost);
+
+app.post('/upload',checkAuth, upload.single('image'), (req, res) => {
+  res.json({url: `./uploads/${req.file.originalname}`})
+})
 
 app.listen(PORT, () => {
   console.log(`Your server is single and ready to mingle at port ${PORT}`);
