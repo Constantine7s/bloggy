@@ -20,3 +20,4 @@ app.get('/auth/me', checkAuth, getSelf);
 app.listen(PORT, () => {
   console.log(`Your server is single and ready to mingle at port ${PORT}`);
 });
+
