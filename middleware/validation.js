@@ -10,7 +10,6 @@ export const signUpValidation = [
 export const loginValidation = [
   body('email').isEmail(),
   body('password').isLength({ min: 8 }),
-
 ];
 
 export const createPostValidation = [

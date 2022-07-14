@@ -1,5 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import 'dotenv/config'
 import {
   signUpValidation,
   loginValidation,
@@ -11,12 +12,11 @@ import checkAuth from './middleware/checkAuth.js';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
+const DB = process.env.DB_URL
 app.use(express.json());
 
 mongoose
-  .connect(
-    'mongodb+srv://admin:admin@cluster0.ubhsuma.mongodb.net/bloggy?retryWrites=true&w=majority'
-  )
+  .connect(DB)
   .then(() => console.log('DB Connected'))
   .catch((err) => console.error('DB Error', err));
 
@@ -24,7 +24,7 @@ app.post('/auth/signup', signUpValidation, UserController.register);
 app.post('/auth/login', loginValidation, UserController.login);
 app.get('/auth/me', checkAuth, UserController.getSelf);
 
-// app.get('/posts', PostController.getAllPosts);
+app.get('/posts', PostController.getAllPosts);
 // app.get('/posts/:id', PostController.getPostById);
 app.post('/posts', checkAuth, createPostValidation, PostController.createPost);
 // app.post('/posts', PostController.deletePost);

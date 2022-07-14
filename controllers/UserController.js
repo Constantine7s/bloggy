@@ -14,14 +14,14 @@ export const register = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
 
-    const doc = new UserModel({
+    const data = new UserModel({
       name: req.body.name,
       email: req.body.email,
       userPic: req.body.userPic,
       passwordHash: hash,
     });
 
-    const user = await doc.save();
+    const user = await data.save();
 
     const token = jwt.sign(
       {
