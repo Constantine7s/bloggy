@@ -29,6 +29,7 @@ app.post('/auth/login', loginValidation, UserController.login);
 app.get('/auth/me', checkAuth, UserController.getSelf);
 
 app.get('/posts', PostController.getAllPosts);
+app.get('/posts/tags', PostController.getTags)
 app.get('/posts/:id', PostController.getPostById);
 app.post('/posts', checkAuth, createPostValidation, PostController.createPost);
 app.delete('/posts/:id', checkAuth, PostController.deletePost);
